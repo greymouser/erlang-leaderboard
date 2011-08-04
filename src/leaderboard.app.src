@@ -1,0 +1,12 @@
+{application, leaderboard,
+ [
+  {description, "Redis-backed leaderboard server"},
+  {vsn, "0.0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+		  sasl
+                 ]},
+  {mod, {leaderboard_app, []}}
+ ]}.
