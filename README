@@ -1,1 +1,49 @@
-YES, THIS IS A README
+= erlang-leaderboard
+
+A leaderboard system in Erlang and backed by Redis - http://redis.io
+
+'erlang-leaderboard' is an erlang implementation of @czarneckid 's 'leaderboard' gem written in Ruby - https://github.com/agoragames/leaderboard
+
+== Installation
+
+Install Erlang. http://www.erlang.org/
+
+Install rebar. You can acquire and build it thusly: 
+
+	git clone git://github.com/basho/rebar.git
+	cd rebar
+	./bootstrap
+	cp rebar /usr/local/bin
+
+Acquire and build the erlang-leaderboard sources. It will fetch cstar's version of erldis automatically, as an internal depenendency. https://github.com/cstar/erldis
+
+	git clone git://github.com/agoragames/erlang-leaderboard.git
+	cd erlang-leaderboard
+	rebar compile
+	# Possibly edit files in ./rel/files/* to your liking, if you so desire
+	rebar generate
+	
+Make sure that redis is running.
+
+TODO - Add info about how to easily start the gen_server (once it works reliably!)
+
+== Compatibility
+
+This software has been built and tested with Erlang/OTP R14B03.
+	
+== Usage
+
+TODO
+      
+== Performance
+
+TODO
+
+== Future Ideas
+
+TODO
+  
+== Copyright
+
+Copyright (c) 2011 Armando Di Cianno. See LICENSE.txt for further details.
+

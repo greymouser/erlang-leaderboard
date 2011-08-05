@@ -1,12 +1,19 @@
 {application, leaderboard,
  [
   {description, "Redis-backed leaderboard server"},
-  {vsn, "0.0.1"},
+  {vsn, "1.0.0"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib,
 		  sasl
                  ]},
-  {mod, {leaderboard_app, []}}
+  {mod, {leaderboard_app, []}},
+  {env, [{host, "127.0.0.1"},
+	 {port, 6379},
+	 {with_scores, true},
+	 {with_rank, true},
+	 {zero_index_for_rank, false},
+	 {page_size, 25}
+  	]}
  ]}.
