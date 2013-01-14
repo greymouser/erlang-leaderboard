@@ -10,9 +10,12 @@
 %%% shortcut to start the app
 
 start() ->
-    application:start(leaderboard_app).
+    application:start(leaderboard).
 
 %%% API
+
+delete(Leaderboard) ->
+    gen_server:cast(leaderboard_server, {delete, Leaderboard}).
 
 members_total(Leaderboard) ->
     gen_server:call(leaderboard_server, {members_total, Leaderboard}).
@@ -28,7 +31,7 @@ score_for(Leaderboard, Member) ->
 
 member_check(Leaderboard, Member) ->
     Ret = gen_server:call(leaderboard_server, {member_check, Leaderboard, Member}),
-    error_logger:info_msg("member_check", Ret),
+    lager:debug("member_check(~p)", [Ret]),
     Ret.
 
 score_and_rank(Leaderboard, Member) ->
@@ -40,9 +43,6 @@ members_in_score_range(Leaderboard, Min, Max) ->
     Ret = gen_server:call(leaderboard_server, {members_in_score_range, Leaderboard, Min, Max}),
     error_logger:info_msg("members_in_score_range", Ret),
     Ret.
-
-leaderboard_delete(Leaderboard) ->
-    gen_server:cast(leaderboard_server, {leaderboard_delete, Leaderboard}).
 
 member_rank(Leaderboard, Member, Score) ->
     gen_server:cast(leaderboard_server, {member_rank, Leaderboard, Member, Score}).

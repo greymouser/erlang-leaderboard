@@ -19,11 +19,15 @@ Acquire and build the erlang-leaderboard sources. It will fetch cstar's version 
 
 	git clone git://github.com/agoragames/erlang-leaderboard.git
 	cd erlang-leaderboard
+	rebar get-deps
 	rebar compile
-	# Possibly edit files in ./rel/files/* to your liking, if you so desire
 	rebar generate
 	
 Make sure that redis is running.
+
+	redis
+
+
 
 TODO - Add info about how to easily start the gen_server (once it works reliably!)
 

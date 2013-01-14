@@ -25,7 +25,6 @@ create(ServerPid, Pid) ->
 
 %%% gen_server defintions
 init(Args) ->
-    error_logger:info_msg("Derp(~p)~n", Args),
     {host, Host} = lists:keyfind(host, 1, Args),
     {port, Port} = lists:keyfind(port, 1, Args),
     {with_scores, WithScores} = lists:keyfind(with_scores, 1, Args),
@@ -35,7 +34,7 @@ init(Args) ->
     process_flag(trap_exit, true),
     case erldis:connect(Host, Port) of
 	{ok, Client} ->
-	    error_logger:info_msg("Connected to redis client<~p>~n", [Client]),
+	    lager:info("Connected to redis client: ~p~n", [Client]),
 	    {ok, #state{client = Client,
 			host = Host,
 			port = Port,
@@ -44,12 +43,14 @@ init(Args) ->
 			zero_index_for_rank = ZeroIndexForRank,
 			page_size = PageSize}};
 	X ->
-	    error_logger:error_msg("Could not connect to redis: ~p~n", [X]),
+	    lager:error("Could not connect to redis: ~p~n", [X]),
 	    {stop, X}
     end.
 
+%%% Calls
+
 handle_call({members_total, Leaderboard}, _From, #state{client = Client} = State) ->
-    {reply, members_total(Client, Leaderboard), State};
+    {reply, erldis:zcard(Client, Leaderboard), State};
 
 handle_call({leaderboard_pages, Leaderboard}, _From, #state{client = Client, page_size = PageSize} = State) ->
     {reply, ceiling(members_total(Client, Leaderboard)/PageSize), State};
@@ -75,7 +76,9 @@ handle_call({members_in_score_range, Leaderboard, Min, Max}, _From, #state{clien
 handle_call(_Request, _From, State) ->
     {noreply, ok, State}.
 
-handle_cast({leaderboard_delete, Leaderboard}, #state{client = Client} = State) ->
+%%% Casts
+
+handle_cast({delete, Leaderboard}, #state{client = Client} = State) ->
     {noreply, erldis:del(Client, Leaderboard), State};
 
 handle_cast({member_rank, Leaderboard, Member, Score}, #state{client = Client} = State) ->
@@ -108,8 +111,8 @@ code_change(_OldVsn, State, _Extra) ->
 
 ranking_format(ZeroRank, Rank) ->
     case ZeroRank of
-	true -> Rank;
-	_ -> Rank + 1
+	   true -> Rank;
+	   _ -> Rank + 1
     end.
 
 members_total(Client, Leaderboard) ->

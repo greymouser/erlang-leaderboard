@@ -6,11 +6,11 @@
 %%% Application callbacks
 
 start(_StartType, _StartArgs) ->
-    error_logger:info_msg("Starting leaderboard application...~n"),
+    lager:debug("Starting leaderboard application"),
     case leaderboard_sup:start_link() of
         {ok, Pid} -> 
             alarm_handler:clear_alarm({application_stopped, leaderboard}),
-	    {ok, Pid};
+	       {ok, Pid};
 	Error ->
 	    alarm_handler:set_alarm({{application_stopped, leaderboard}, []}),
 	    Error
