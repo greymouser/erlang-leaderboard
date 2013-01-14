@@ -15,25 +15,30 @@ Install rebar. You can acquire and build it thusly:
 	./bootstrap
 	cp rebar /usr/local/bin
 
-Acquire and build the erlang-leaderboard sources. It will fetch cstar's version of erldis automatically, as an internal depenendency. https://github.com/cstar/erldis
+Acquire and build the erlang-leaderboard sources.
 
 	git clone git://github.com/agoragames/erlang-leaderboard.git
 	cd erlang-leaderboard
 	rebar get-deps
-	rebar compile
-	rebar generate
+	rebar compile generate
 	
 Make sure that redis is running.
 
 	redis
 
+From the repo directory, you can start an interactive console which is ready to interact with the leaderboard app.
 
+	./rel/leaderboard/bin/leaderboard console
 
-TODO - Add info about how to easily start the gen_server (once it works reliably!)
+... or you at start the app, and connect to the live app from another shell.
+
+	./rel/leaderboard/bin/leaderboard start
+	(other shell)
+	./rel/leaderboard/bin/leaderboard attach
 
 == Compatibility
 
-This software has been built and tested with Erlang/OTP R14B03.
+This software has been built and tested with Erlang/OTP R15B03.
 	
 == Usage
 
