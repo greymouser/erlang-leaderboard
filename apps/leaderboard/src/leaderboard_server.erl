@@ -52,7 +52,7 @@ init(Args) ->
 handle_call({members_total, Leaderboard}, _From, #state{client = Client} = State) ->
     {reply, erldis:zcard(Client, Leaderboard), State};
 
-handle_call({leaderboard_pages, Leaderboard}, _From, #state{client = Client, page_size = PageSize} = State) ->
+handle_call({pages, Leaderboard}, _From, #state{client = Client, page_size = PageSize} = State) ->
     {reply, ceiling(members_total(Client, Leaderboard)/PageSize), State};
 
 handle_call({rank_for, Leaderboard, Member}, _From, #state{client = Client} = State) ->
@@ -81,8 +81,14 @@ handle_call(_Request, _From, State) ->
 handle_cast({delete, Leaderboard}, #state{client = Client} = State) ->
     {noreply, erldis:del(Client, Leaderboard), State};
 
-handle_cast({member_rank, Leaderboard, Member, Score}, #state{client = Client} = State) ->
-    {noreply, erldis:zadd(Client, Leaderboard, Score, Member), State};
+handle_cast({member_rank, Leaderboard, Member, Score, MemberData}, #state{client = Client} = State) ->
+    {noreply,
+        erldis:zadd(Client, Leaderboard, Score, Member),
+        case MemberData of
+            nil -> ok;
+            _Else -> erldis:hset(Client, Leaderboard ++ ":member_data", Member, MemberData)
+        end,
+        State};
 
 handle_cast({member_remove, Leaderboard, Member}, #state{client = Client} = State) ->
     {noreply, erldis:zrem(Client, Leaderboard, Member), State};

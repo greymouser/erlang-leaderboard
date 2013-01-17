@@ -14,14 +14,16 @@ start() ->
 
 %%% API
 
+%%% Calls
+
 delete(Leaderboard) ->
     gen_server:cast(leaderboard_server, {delete, Leaderboard}).
 
 members_total(Leaderboard) ->
     gen_server:call(leaderboard_server, {members_total, Leaderboard}).
 
-leaderboard_pages(Leaderboard) ->
-    gen_server:call(leaderboard_server, {leaderboard_pages, Leaderboard}).
+pages(Leaderboard) ->
+    gen_server:call(leaderboard_server, {pages, Leaderboard}).
 
 rank_for(Leaderboard, Member) ->
     gen_server:call(leaderboard_server, {rank_for, Leaderboard, Member}).
@@ -44,8 +46,12 @@ members_in_score_range(Leaderboard, Min, Max) ->
     error_logger:info_msg("members_in_score_range", Ret),
     Ret.
 
+%%% Casts
+
 member_rank(Leaderboard, Member, Score) ->
-    gen_server:cast(leaderboard_server, {member_rank, Leaderboard, Member, Score}).
+    gen_server:cast(leaderboard_server, {member_rank, Leaderboard, Member, Score, nil}).
+member_rank(Leaderboard, Member, Score, MemberData) ->
+    gen_server:cast(leaderboard_server, {member_rank, Leaderboard, Member, Score, MemberData}).
 
 member_remove(Leaderboard, Member) ->
     gen_server:cast(leaderboard_server, {member_remove, Leaderboard, Member}).
